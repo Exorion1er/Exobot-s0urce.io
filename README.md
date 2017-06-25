@@ -22,6 +22,13 @@ To change a configuration, open your browser's console and type `Exo.<configurat
 The configurations available are listed below.
 
 ```
-**Interval :** Changes a tick duration. See the note about this on the README. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
-**HackedMessage :** Message displayed on the target's page when hacked
+Interval : Changes a tick duration. See the note below. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
+HackedMessage : Message displayed on the target's page when hacked
 ```
+
+# Interval
+A good interval for this bot is 350 and it's the default.
+
+If you set your interval too low, the bot will still work but the server-side anticheat will block it because you'll be too fast.
+The way it blocks a client is by not taking in account the word typed.
+In case this happens, the bot will simply stop typing words. If it happens to you, you can't revert it, you'll have to refresh your page.
