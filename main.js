@@ -427,7 +427,3 @@ Exo.IsVisible = function(dom) {
 Exo.Submit = function(dom) {
 	$(dom).trigger("submit");
 }
-
-// DEBUG
-
-Exo.Start("-1RV6t1FgfddcAnGANKZ");
