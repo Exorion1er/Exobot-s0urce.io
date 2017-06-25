@@ -22,8 +22,8 @@ To change a configuration, open your browser's console and type `Exo.<configurat
 The configurations available are listed below.
 
 ```
-Interval : Changes a tick duration. See the note below. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
-HackedMessage : Message displayed on the target's page when hacked
+Interval : Changes a tick duration. See the note below. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS. eg: 500. default: 350.
+HackedMessage : Message displayed on the target's page when hacked. eg: "Hey there". default: "Exobot".
 ```
 
 # Interval

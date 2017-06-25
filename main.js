@@ -18,7 +18,7 @@ Exo.GUI = {};
 */
 
 Exo.Interval = 350;
-Exo.HackedMessage = "Rekt By Exo";
+Exo.HackedMessage = "Exobot";
 
 // INTERNAL # DO NOT TOUCH
 
