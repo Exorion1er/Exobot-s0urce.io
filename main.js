@@ -341,12 +341,7 @@ Exo.Start = function(target) {
 
 	var ready = targetLoaded = portsVisible = wordTyped = confirmed = false;
 	var port = 1;
-	var progress = 0;
-
-	$(hackingImage).load = function() {
-		var barProgress = parseInt(hackingProgressBar.style.width);
-
-	}
+	var progress = timeout = 0;
 
 	Exo.Worker = setInterval(function() {
 		if (!Exo.Initiated) {
