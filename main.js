@@ -82,6 +82,8 @@ Exo.GUI.Create = function() {
 	var contentTargetFormInput = document.createElement("input");
 	var contentTargetSubmit = document.createElement("div");
 	var contentTargetError = document.createElement("div");
+	var contentStop = document.createElement("div");
+	var contentStopButton = document.createElement("div");
 	var contentWord = document.createElement("div");
 	var contentWordLabel = document.createElement("div");
 	var contentWordForm = document.createElement("form");
@@ -108,6 +110,7 @@ Exo.GUI.Create = function() {
 	content.classList.add("window-content");
 	content.style.width = "336px";
 
+	contentTarget.id = "exobot-target";
 	contentTarget.style.borderBottom = "1px solid rgba(191, 207, 210, .5)";
 	contentTarget.style.paddingBottom = "15px";
 	contentTarget.style.marginBottom = "15px";
@@ -134,7 +137,20 @@ Exo.GUI.Create = function() {
 	contentTargetError.id = "exobot-targeterror";
 	contentTargetError.style.color = "orange";
 	contentTargetError.innerHTML = "";
-	contentTargetError.hidden = true;
+	contentTargetError.setAttribute("hidden", true);
+
+	contentStop.id = "exobot-stop";
+	contentStop.style.borderBottom = "1px solid rgba(191, 207, 210, .5)";
+	contentStop.style.paddingBottom = "15px";
+	contentStop.style.marginBottom = "15px";
+	contentStop.setAttribute("hidden", true);
+
+	contentStopButton.type = "button";
+	contentStopButton.classList.add("button");
+	contentStopButton.style.width = "100%";
+	contentStopButton.style.margin = "auto";
+	contentStopButton.innerHTML = "Stop";
+	contentStopButton.setAttribute("onclick", "Exo.GUI.ToggleStartStop(); Exo.Stop();");
 
 	contentWord.id = "exobot-worddiv";
 	contentWord.style.paddingBottom = "15px";
@@ -164,7 +180,7 @@ Exo.GUI.Create = function() {
 	contentWordError.id = "exobot-worderror";
 	contentWordError.style.color = "orange";
 	contentWordError.innerHTML = "";
-	contentWordError.hidden = true;
+	contentWordError.setAttribute("hidden", true);
 
 	// Tree create
 
@@ -177,17 +193,17 @@ Exo.GUI.Create = function() {
 	contentTargetForm.innerHTML += "> ";
 	contentTargetForm.appendChild(contentTargetFormInput);
 
-	content.appendChild(contentTarget);
 	contentTarget.appendChild(contentTargetLabel);
 	contentTarget.appendChild(contentTargetForm);
 	contentTarget.innerHTML += " ";
 	contentTarget.appendChild(contentTargetSubmit);
 	contentTarget.appendChild(contentTargetError);
 
+	contentStop.appendChild(contentStopButton);
+
 	contentWordForm.innerHTML += "> ";
 	contentWordForm.appendChild(contentWordFormInput);
 
-	content.appendChild(contentWord);
 	contentWord.appendChild(contentWordLabel);
 	contentWord.appendChild(contentWordForm);
 	contentWord.innerHTML += " ";
@@ -195,6 +211,7 @@ Exo.GUI.Create = function() {
 	contentWord.appendChild(contentWordError);
 
 	content.appendChild(contentTarget);
+	content.appendChild(contentStop);
 	content.appendChild(contentWord);
 
 	gui.appendChild(title);
@@ -211,11 +228,21 @@ Exo.GUI.Start = function() {
 
 	if (target != null && target != undefined && target != "") {
 		Exo.Log("Starting bot from GUI. Target : " + target);
-		error.setAttribute("hidden", "true");
+		error.setAttribute("hidden", true);
 		Exo.Start(target);
 	} else {
 		error.innerHTML = "Please provide a target.";
 		error.removeAttribute("hidden");
+	}
+}
+
+Exo.GUI.ToggleStartStop = function(status) {
+	if (!status) {
+		document.getElementById("exobot-target").removeAttribute("hidden");
+		document.getElementById("exobot-stop").setAttribute("hidden", true);
+	} else {
+		document.getElementById("exobot-target").setAttribute("hidden", true);
+		document.getElementById("exobot-stop").removeAttribute("hidden");
 	}
 }
 
@@ -231,7 +258,7 @@ Exo.GUI.WordEntered = function() {
 		var label = document.getElementById("exobot-wordlabel")
 
 		Exo.Log("Received unknown word input. Word : " + word);
-		error.setAttribute("hidden", "true");
+		error.setAttribute("hidden", true);
 		Exo.AddUnknownWord(askingForWord, word);
 
 		label.innerHTML = "Word ():";
@@ -349,6 +376,9 @@ Exo.Start = function(target) {
 		return;
 	}
 
+	Exo.GUI.ToggleStartStop(true);
+	Exo.Log("Started");
+
 	var ready = targetLoaded = portsVisible = wordTyped = confirmed = false;
 	var port = 1;
 	var progress = timeout = 0;
@@ -449,6 +479,9 @@ Exo.Start = function(target) {
 Exo.Stop = function() {
 	clearInterval(Exo.Worker);
 	Exo.Worker = null;
+	Exo.GUI.ToggleStartStop(false);
+
+	Exo.Log("Stopped.");
 }
 
 // UTILS
