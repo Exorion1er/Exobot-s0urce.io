@@ -1,5 +1,5 @@
 # How to use
-Step 1 : Open your browser's console and copy paste this :
+**Step 1 :** Open your browser's console and copy paste this :
 
 ```javascript
 var exobot = document.createElement("script");
@@ -8,7 +8,7 @@ $(exobot).load("https://raw.githubusercontent.com/ExoKalork/Exobot-s0urce.io/mas
 document.head.appendChild(exobot);
 ```
 
-Step 2 : Wait a second or two and then type this : 
+**Step 2 :** Wait a second or two and then type this : 
 
 ```javascript
 Exo.Initiate();
@@ -16,10 +16,10 @@ Exo.Initiate();
 
 Exobot is ready to go. You can now see a red GUI at the bottom right of your game screen.
 
-Step 3 : You first need a target. A target ID looks like this : `0gK-4OLweWN9BePvAFwv`
+**Step 3 :** You first need a target. A target ID looks like this : `0gK-4OLweWN9BePvAFwv`
 A good way to get a target would be to open the game in another browser and log in, then get your brand new target's ID, and put it in the "Target ID" input. Then, just click Start and your bot will work by itself.
 
-Note : If the bot encounters a word that he doesn't know about, it will prompt you what word it should type. If this happens, you'll see the "Word" input become visible and usable. You can type the needed word in that input and then click "Validate". After that, the bot will resume it's work and won't ask you again about this word.
+**Note :** If the bot encounters a word that he doesn't know about, it will prompt you what word it should type. If this happens, you'll see the "Word" input become visible and usable. You can type the needed word in that input and then click "Validate". After that, the bot will resume it's work and won't ask you again about this word.
 
 # Configuration
 To change a configuration, open your browser's console and type `Exo.<configuration> = <new value>`.
