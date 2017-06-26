@@ -16,11 +16,13 @@ Exo.GUI = {};
 	Interval : Changes a tick duration. See the note about this on the README. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
 	HackedMessage : Message displayed on the target's page when hacked
 	LoadExternalImages : Load images from github instead of typing them yourself.
+	Debug : Adds debug informations to the console.
 */
 
 Exo.Interval = 350;
 Exo.HackedMessage = "Exobot";
 Exo.LoadExternalImages = true;
+Exo.Debug = false;
 
 // INTERNAL # DO NOT TOUCH
 
@@ -61,7 +63,7 @@ Exo.Initiate = function() {
 
 Exo.GUI.KillAd = function() {
 	adWindow.style.display = "none";
-	console.log("Killed ad.");
+	Exo.Log("Killed ad.");
 }
 
 Exo.GUI.Create = function() {
@@ -199,7 +201,7 @@ Exo.GUI.Create = function() {
 
 	windowWrapper.appendChild(gui);
 
-	console.log("GUI Created.");
+	Exo.Log("GUI Created.");
 }
 
 Exo.GUI.Start = function() {
@@ -207,7 +209,7 @@ Exo.GUI.Start = function() {
 	var error = document.getElementById("exobot-targeterror");
 
 	if (target != null && target != undefined && target != "") {
-		console.log("Starting bot from GUI. Target : " + target);
+		Exo.Log("Starting bot from GUI. Target : " + target);
 		error.setAttribute("hidden", "true");
 		Exo.Start(target);
 	} else {
@@ -227,7 +229,7 @@ Exo.GUI.WordEntered = function() {
 		var div = document.getElementById("exobot-worddiv");
 		var label = document.getElementById("exobot-wordlabel")
 
-		console.log("Received unknown word input. Word : " + word);
+		Exo.Log("Received unknown word input. Word : " + word);
 		error.setAttribute("hidden", "true");
 		Exo.AddUnknownWord(askingForWord, word);
 
@@ -245,21 +247,21 @@ Exo.GUI.SetProfilePicture = function() {
 	profilePicture.src = "https://github.com/ExoKalork/Exobot-s0urce.io/raw/master/image.gif";
 	profilePicture.style.height = "72px";
 
-	console.log("Profile picture replaced.");
+	Exo.Log("Profile picture replaced.");
 }
 
 Exo.GUI.SetRankName = function() {
 	rankMaster.children[1].innerHTML = "BotMaster";
-	console.log("Master rank renamed.");
+	Exo.Log("Master rank renamed.");
 }
 
 Exo.LoadImages = function() {
 	Exo.LoadJSON("https://raw.githubusercontent.com/ExoKalork/Exobot-s0urce.io/master/images.json", function(data) {
 		images = data;
-		console.log("Loaded external images.");
+		Exo.Log("Loaded external images.");
 
 		Exo.Initiated = true;
-		console.log("Exobot initiated");
+		Exo.Log("Exobot initiated");
 	});
 }
 
@@ -294,7 +296,7 @@ Exo.TypeWord = function() {
 Exo.AddUnknownWord = function(key, word) {
 	images[key] = word;
 	askingForWord = false;
-	console.log("Added " + word + " (" + key + ") to images.");
+	Exo.Log("Added " + word + " (" + key + ") to images.");
 }
 
 Exo.ConfirmSuccess = function() {
@@ -303,7 +305,7 @@ Exo.ConfirmSuccess = function() {
 		successButton.click();
 		return true;
 	}
-	console.error("Tried to confirm success even though the window is not visible.");
+	console.error("[Exobot] Tried to confirm success even though the window is not visible.");
 	return false;
 }
 
@@ -311,17 +313,16 @@ Exo.OpenPort = function(port) {
 	var button = document.getElementById("window-other-port" + port);
 	if (button != undefined) {
 		button.click();
-		console.log("Opened port " + port);
+		Exo.Log("Opened port " + port);
 	} else {
-		console.error("Wrong port input : window-other-port" + port);
-		console.error(button);
+		console.error("[exobot] Wrong port input : window-other-port" + port);
 	}
 }
 
 Exo.OpenTarget = function(target) {
 	targetInput.value = target.trim();
 	Exo.Submit(targetForm);
-	console.log("Target acquired.");
+	Exo.Log("Target acquired.");
 }
 
 Exo.ShowPorts = function() {
@@ -329,12 +330,12 @@ Exo.ShowPorts = function() {
 		hackButton.click();
 		return true;
 	}
-	console.error("Tried to click hack button, but it's not visible.");
+	console.error("[Exobot] Tried to click hack button, but it's not visible.");
 }
 
 Exo.Start = function(target) {
 	if (target == null || target == undefined || target.trim() == "") {
-		console.error("Please input a target.");
+		console.error("[Exobot]Please input a target.");
 		return;
 	}
 
@@ -354,22 +355,22 @@ Exo.Start = function(target) {
 		}
 		if (!Exo.IsVisible(targetWindow)) {
 			if (!targetLoaded) {
-				console.log("Acquiring target...");
+				Exo.Log("Acquiring target...");
 				Exo.OpenTarget(target);
 				targetLoaded = true;
 				return;
 			}
-			console.log("Target window is not visible yet, waiting for next tick.");
+			Exo.Log("Target window is not visible yet, waiting for next tick.");
 			return;
 		}
 		if (!Exo.IsVisible(portsWrapper)) {
 			if (!portsVisible) {
 				Exo.ShowPorts();
-				console.log("Showing ports of target.");
+				Exo.Log("Showing ports of target.");
 				portsVisible = true;
 				return;
 			}
-			console.log("Ports are not visible yet, waiting for next tick");
+			Exo.Log("Ports are not visible yet, waiting for next tick");
 			return;
 		}
 		if (!ready) {
@@ -381,17 +382,17 @@ Exo.Start = function(target) {
 		if (ready && Exo.IsVisible(hackingWindow)) {
 			if (confirmed) {
 				if (Exo.IsVisible(success)) {
-					console.log("Waiting for success window to close.");
+					Exo.Log("Waiting for success window to close.");
 					return;
 				}
 				confirmed = false;
-				console.log("Success window closed, resuming.");
+				Exo.Log("Success window closed, resuming.");
 				return;
 			} else {
 				var barProgress = parseInt(hackingProgressBar.style.width);
 
 				if (Exo.IsVisible(success)) {
-					console.log("Hacking successfull, confirming.");
+					Exo.Log("Hacking successfull, confirming.");
 					Exo.ConfirmSuccess();
 
 					ready = false;
@@ -409,33 +410,33 @@ Exo.Start = function(target) {
 					if (barProgress < 100) {
 						wordTyped = false;
 						progress = barProgress;
-						console.log("Progress changed to " + barProgress);
+						Exo.Log("Progress changed to " + barProgress);
 						return;
 					}
-					console.log("Progress bar is full, waiting for success window.");
+					Exo.Log("Progress bar is full, waiting for success window.");
 					return;
 				} else if (!wordTyped) {
 					if (Exo.GetWordKey()) {
 						if (!askingForWord) {
-							console.log("Typing word");
+							Exo.Log("Typing word");
 							if (Exo.TypeWord()) {
 								wordTyped = true;
 							} else {
-								console.log("Unknown word, asking user.");
+								Exo.Log("Unknown word, asking user.");
 							}
 							return;
 						}
-						console.log("Waiting for the unknown word from user.");
+						Exo.Log("Waiting for the unknown word from user.");
 						return;
 					}
-					console.log("Word not loaded, waiting for next tick.");
+					Exo.Log("Word not loaded, waiting for next tick.");
 					return;
 				}
-				console.log("Waiting for game to load to perform next action.");
+				Exo.Log("Waiting for game to load to perform next action.");
 				return;
 			}
 		}
-		console.log("Hacking window is not open yet, waiting for next tick.");
+		Exo.Log("Hacking window is not open yet, waiting for next tick.");
 		return;
 	}, Exo.Interval);
 }
@@ -467,4 +468,10 @@ Exo.LoadJSON = function(url, callback) {
 		}
 	};
 	xobj.send(null);  
+}
+
+Exo.Log = function(log) {
+	if (Exo.Debug) {
+		console.log("[Exobot] " + log);
+	}
 }
