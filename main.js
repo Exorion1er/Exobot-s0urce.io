@@ -344,11 +344,15 @@ Exo.ConfirmSuccess = function() {
 Exo.OpenPort = function(port) {
 	var button = document.getElementById("window-other-port" + port);
 	if (button != undefined) {
-		button.click();
-		Exo.Log("Opened port " + port);
-	} else {
-		console.error("[Exobot] Wrong port input : window-other-port" + port);
+		if (parseFloat(button.style.opacity) == 1.0) {
+			button.click();
+			Exo.Log("Opened port " + port);
+			return true;
+		}
+		return false;
 	}
+	console.error("[Exobot] Wrong port input : window-other-port" + port);
+	return false;
 }
 
 Exo.OpenTarget = function(target) {
@@ -409,8 +413,11 @@ Exo.Start = function(target) {
 			return;
 		}
 		if (!ready) {
-			Exo.OpenPort(port);
-			ready = true;
+			if (Exo.OpenPort(port)) {
+				ready = true;
+				return;
+			}
+			Exo.Log("I don't have enough BTC to open port, checking again next tick.");
 			return;
 		}
 
