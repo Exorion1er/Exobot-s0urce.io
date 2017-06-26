@@ -23,7 +23,7 @@ The configurations available are listed below.
 
 ```
 Interval : Changes a tick duration. See the note below. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS. eg: 500. default: 350.
-HackedMessage : Message displayed on the target's page when hacked. eg: "Hey there". default: "Exobot".
+HackedMessage : Message displayed on the target's page when hacked. If this configuration is set to "" (aka nothing) the bot will click okay instead of send. eg: "Hey there". default: "Exobot".
 LoadExternalImages : Load images from github instead of typing them yourself. eg: false. default: true.
 Debug : Adds debug informations to the console. eg: true. default: false.
 
