@@ -348,23 +348,23 @@ Exo.Start = function(target) {
 			Exo.Initiate();
 			return;
 		}
+		if (!targetLoaded) {
+			Exo.Log("Acquiring target...");
+			Exo.OpenTarget(target);
+			targetLoaded = true;
+			return;
+		}
 		if (!Exo.IsVisible(targetWindow)) {
-			if (!targetLoaded) {
-				Exo.Log("Acquiring target...");
-				Exo.OpenTarget(target);
-				targetLoaded = true;
-				return;
-			}
 			Exo.Log("Target window is not visible yet, waiting for next tick.");
 			return;
 		}
-		if (!Exo.IsVisible(portsWrapper)) {
-			if (!portsVisible) {
+		if (!portsVisible) {
 				Exo.ShowPorts();
 				Exo.Log("Showing ports of target.");
 				portsVisible = true;
 				return;
 			}
+		if (!Exo.IsVisible(portsWrapper)) {
 			Exo.Log("Ports are not visible yet, waiting for next tick");
 			return;
 		}
