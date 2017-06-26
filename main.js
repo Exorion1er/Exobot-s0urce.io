@@ -315,7 +315,7 @@ Exo.OpenPort = function(port) {
 		button.click();
 		Exo.Log("Opened port " + port);
 	} else {
-		console.error("[exobot] Wrong port input : window-other-port" + port);
+		console.error("[Exobot] Wrong port input : window-other-port" + port);
 	}
 }
 
@@ -335,7 +335,7 @@ Exo.ShowPorts = function() {
 
 Exo.Start = function(target) {
 	if (target == null || target == undefined || target.trim() == "") {
-		console.error("[Exobot]Please input a target.");
+		console.error("[Exobot] Please input a target.");
 		return;
 	}
 
