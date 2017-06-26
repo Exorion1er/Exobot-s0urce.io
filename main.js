@@ -28,8 +28,8 @@ Exo.Debug = false;
 
 Exo.Initiated = false;
 var images = {};
-var windowWrapper = hackingImage = hackingInput = hackingForm = hackingWindow = hackingProgressBar = success = successInput = successButton = targetInput =
-targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = undefined;
+var windowWrapper = hackingImage = hackingInput = hackingForm = hackingWindow = hackingProgressBar = success = successInput = successButtonSend = successButtonOkay =
+	targetInput = targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = undefined;
 var askingForWord = false;
 
 Exo.Initiate = function() {
@@ -41,7 +41,8 @@ Exo.Initiate = function() {
 	hackingProgressBar = document.getElementById("progressbar-firewall-amount");
 	success = document.getElementById("topwindow-success");
 	successInput = document.getElementById("targetmessage-input");
-	successButton = document.getElementById("targetmessage-button-send");
+	successButtonSend = document.getElementById("targetmessage-button-send");
+	successButtonOkay = document.getElementsByClassName("targetmessage-button-cancel")[0];
 	targetInput = document.getElementById("targetid-input");
 	targetForm = document.getElementById("targetid-input-form");
 	targetWindow = document.getElementById("window-other");
@@ -301,8 +302,12 @@ Exo.AddUnknownWord = function(key, word) {
 
 Exo.ConfirmSuccess = function() {
 	if (Exo.IsVisible(success)) {
-		successInput.value = Exo.HackedMessage;
-		successButton.click();
+		if (Exo.HackedMessage != "") {
+			successInput.value = Exo.HackedMessage;
+			successButtonSend.click();
+		} else {
+			successButtonOkay.click();
+		}
 		return true;
 	}
 	console.error("[Exobot] Tried to confirm success even though the window is not visible.");
