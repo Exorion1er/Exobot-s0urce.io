@@ -339,6 +339,11 @@ Exo.ShowPorts = function() {
 }
 
 Exo.Start = function(target) {
+	if (Exo.Worker != undefined && Exo.Worker != null) {
+		console.error("[Exobot] Bot is already running. Please stop it before running another instance of it.");
+		return;
+	}
+
 	if (target == null || target == undefined || target.trim() == "") {
 		console.error("[Exobot] Please input a target.");
 		return;
@@ -443,6 +448,7 @@ Exo.Start = function(target) {
 
 Exo.Stop = function() {
 	clearInterval(Exo.Worker);
+	Exo.Worker = null;
 }
 
 // UTILS
