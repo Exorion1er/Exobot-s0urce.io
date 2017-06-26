@@ -15,10 +15,12 @@ Exo.GUI = {};
 
 	Interval : Changes a tick duration. See the note about this on the README. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
 	HackedMessage : Message displayed on the target's page when hacked
+	LoadExternalImages : Load images from github instead of typing them yourself.
 */
 
 Exo.Interval = 350;
 Exo.HackedMessage = "Exobot";
+Exo.LoadExternalImages = true;
 
 // INTERNAL # DO NOT TOUCH
 
@@ -52,8 +54,9 @@ Exo.Initiate = function() {
 	Exo.GUI.SetRankName();
 	Exo.GUI.Create();
 
-	Exo.Initiated = true;
-	console.log("Exobot initiated.");
+	if (Exo.LoadExternalImages) {
+		Exo.LoadImages();
+	}
 }
 
 Exo.GUI.KillAd = function() {
@@ -250,6 +253,16 @@ Exo.GUI.SetRankName = function() {
 	console.log("Master rank renamed.");
 }
 
+Exo.LoadImages = function() {
+	Exo.LoadJSON("https://raw.githubusercontent.com/ExoKalork/Exobot-s0urce.io/master/images.json", function(data) {
+		images = data;
+		console.log("Loaded external images.");
+
+		Exo.Initiated = true;
+		console.log("Exobot initiated");
+	});
+}
+
 Exo.GetWordKey = function() {
 	match = /\/([a-z0-9]+)\.png$/.exec(hackingImage.src);
 
@@ -442,4 +455,16 @@ Exo.IsVisible = function(dom) {
 
 Exo.Submit = function(dom) {
 	$(dom).trigger("submit");
+}
+
+Exo.LoadJSON = function(url, callback) {
+	var xobj = new XMLHttpRequest();
+	xobj.overrideMimeType("application/json");
+	xobj.open("GET", url, true);
+	xobj.onreadystatechange = function () {
+	if (xobj.readyState == 4 && xobj.status == "200") {
+			callback(JSON.parse(xobj.responseText));
+		}
+	};
+	xobj.send(null);  
 }
