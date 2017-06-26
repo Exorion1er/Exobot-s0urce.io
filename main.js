@@ -130,7 +130,10 @@ Exo.GUI.Create = function() {
 	contentTargetError.innerHTML = "";
 	contentTargetError.hidden = true;
 
+	contentWord.id = "exobot-worddiv";
 	contentWord.style.paddingBottom = "15px";
+	contentWord.style.pointerEvents = "none";
+	contentWord.style.opacity = 0.2;
 
 	contentWordLabel.id = "exobot-wordlabel";
 	contentWordLabel.innerHTML = "Word ():";
@@ -218,9 +221,17 @@ Exo.GUI.WordEntered = function() {
 	input.value = "";
 
 	if (word != null && word != undefined && word != "") {
+		var div = document.getElementById("exobot-worddiv");
+		var label = document.getElementById("exobot-wordlabel")
+
 		console.log("Received unknown word input. Word : " + word);
 		error.setAttribute("hidden", "true");
 		Exo.AddUnknownWord(askingForWord, word);
+
+		label.innerHTML = "Word ():";
+		div.style.pointerEvents = "none";
+		div.style.opacity = 0.2;
+		input.blur();
 	} else {
 		error.innerHTML = "Please provide a word.";
 		error.removeAttribute("hidden");
@@ -258,6 +269,11 @@ Exo.TypeWord = function() {
 		return true;
 	}
 	askingForWord = key;
+
+	var div = document.getElementById("exobot-worddiv");
+	document.getElementById("exobot-wordlabel").innerHTML = "Word (" + key + "):";
+	div.style.pointerEvents = "auto";
+	div.style.opacity = 1.0;
 	document.getElementById("exobot-word").focus();
 	return false;
 }
