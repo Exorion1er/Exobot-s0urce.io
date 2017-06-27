@@ -294,9 +294,9 @@ Exo.LoadImages = function() {
 }
 
 Exo.GetWordKey = function() {
-	match = /\/([a-z0-9]+)\.png$/.exec(hackingImage.src);
+	match = /\/((?:easy|medium|hard)\/[a-z0-9]+)\.png$/.exec(hackingImage.src);
 
-	if (match[1] == "template") {
+	if (match[1] == null || match[1] == undefined) {
 		return false;
 	}
 
