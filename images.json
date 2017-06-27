@@ -180,5 +180,8 @@
     "hard/m3n63":"checkhttptype",
     "hard/k23j6":"eventlistdir",
     "hard/j35g2":"mergesocket",
-    "hard/b235":"getmysqldomain"
+    "hard/b235":"getmysqldomain",
+    "hard/m2b62":"getpartoffile",
+    "hard/k32h6j":"rootcookieset",
+    "hard/l4j56":"decryptdatabatch"
 }
