@@ -28,9 +28,11 @@ Exo.Debug = false;
 
 Exo.Initiated = false;
 var images = {};
-var windowWrapper = hackingImage = hackingInput = hackingForm = hackingWindow = hackingProgressBar = success = successInput = successButtonSend = successButtonOkay =
-	targetInput = targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = undefined;
 var askingForWord = false;
+
+var windowWrapper = hackingImage = hackingInput = hackingForm = hackingWindow = hackingProgressBar = success = successInput = successButtonSend = successButtonOkay =
+	targetInput = targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = BTCAmount = blackMarketMiners =
+	myDataMiners = undefined;
 
 Exo.Initiate = function() {
 	windowWrapper = document.getElementsByClassName("window-wrapper")[0];
@@ -51,10 +53,21 @@ Exo.Initiate = function() {
 	adWindow = document.getElementById("window-msg");
 	profilePicture = document.getElementsByClassName("window-my-wrapper")[0].children[0];
 	rankMaster = document.getElementById("window-rank-container").children[5];
+	BTCAmount = document.getElementById("window-my-coinamount");
+	blackMarketMiners = document.getElementById("window-shop-container").children;
+	myDataMiners = [];
+
+	myDataMiners.push(document.getElementById("shop-basic-miner-inv"));
+	myDataMiners.push(document.getElementById("shop-advanced-miner-inv"));
+	myDataMiners.push(document.getElementById("shop-mining-drill-inv"));
+	myDataMiners.push(document.getElementById("shop-data-center-inv"));
+	myDataMiners.push(document.getElementById("shop-bot-net-inv"));
+	myDataMiners.push(document.getElementById("shop-quantum-server-inv"));
 
 	Exo.GUI.KillAd();
 	Exo.GUI.SetProfilePicture();
 	Exo.GUI.SetRankName();
+	Exo.GUI.UnlockMiners();
 	Exo.GUI.Create();
 
 	if (Exo.LoadExternalImages) {
@@ -281,6 +294,27 @@ Exo.GUI.SetProfilePicture = function() {
 Exo.GUI.SetRankName = function() {
 	rankMaster.children[1].innerHTML = "BotMaster";
 	Exo.Log("Master rank renamed.");
+}
+
+Exo.GUI.UnlockMiners = function() {
+	var names = [
+		"Data Miner",
+		"Advanced Miner",
+		"Mining Drill",
+		"Data Center",
+		"Botnet",
+		"Quantum Server"
+		];
+
+	for (i = 1; i < 6; i++) {
+		myDataMiners[i].children[0].innerHTML = names[i];
+		myDataMiners[i].children[1].src = "../client/img/icon-miner-" + (i + 1) + ".png";
+		blackMarketMiners[i].children[0].src = "../client/img/icon-miner-" + (i + 1) + ".png";
+		blackMarketMiners[i].children[1].children[0].innerHTML = names[i];
+		console.log(blackMarketMiners[i]);
+	}
+
+	Exo.Log("Miners unlocked.");
 }
 
 Exo.LoadImages = function() {
