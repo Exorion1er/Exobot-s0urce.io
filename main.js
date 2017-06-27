@@ -322,7 +322,6 @@ Exo.GUI.UnlockMiners = function() {
 		myDataMiners[i].children[1].src = "../client/img/icon-miner-" + (i + 1) + ".png";
 		blackMarketMiners[i].children[0].src = "../client/img/icon-miner-" + (i + 1) + ".png";
 		blackMarketMiners[i].children[1].children[0].innerHTML = names[i];
-		console.log(blackMarketMiners[i]);
 	}
 
 	Exo.Log("Miners unlocked.");
