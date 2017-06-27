@@ -13,13 +13,17 @@ Exo.GUI = {};
 
 	Those configs can be edited directly in your browser's console.
 
-	Interval : Changes a tick duration. See the note about this on the README. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
+	Setup : Tells the bot to either buy data miners or not.
+	AttackInterval : Changes a tick duration for the bot attacks. See the note about this on the README. DO NOT CHANGE IF YOU DON'T KNOW WHAT THIS IS
+	SetupInterval : Changes a tick duration for the bot setup.
 	HackedMessage : Message displayed on the target's page when hacked
 	LoadExternalImages : Load images from github instead of typing them yourself.
 	Debug : Adds debug informations to the console.
 */
 
-Exo.Interval = 350;
+Exo.Setup = true;
+Exo.AttackInterval = 350;
+Exo.SetupInterval = 250;
 Exo.HackedMessage = "Exobot";
 Exo.LoadExternalImages = true;
 Exo.Debug = false;
@@ -28,11 +32,12 @@ Exo.Debug = false;
 
 Exo.Initiated = false;
 var images = {};
+var miners = [];
 var askingForWord = false;
 
 var windowWrapper = hackingImage = hackingInput = hackingForm = hackingWindow = hackingProgressBar = success = successInput = successButtonSend = successButtonOkay =
-	targetInput = targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = BTCAmount = blackMarketMiners =
-	myDataMiners = undefined;
+	targetInput = targetForm = targetWindow = hackButton = portsWrapper = adWindow = profilePicture = rankMaster = BTCAmount = blackMarket = blackMarketButton =
+	blackMarketMiners = myDataMiners = myDataMinersWindow = myDataMinersButton = undefined;
 
 Exo.Initiate = function() {
 	windowWrapper = document.getElementsByClassName("window-wrapper")[0];
@@ -54,8 +59,12 @@ Exo.Initiate = function() {
 	profilePicture = document.getElementsByClassName("window-my-wrapper")[0].children[0];
 	rankMaster = document.getElementById("window-rank-container").children[5];
 	BTCAmount = document.getElementById("window-my-coinamount");
+	blackMarket = document.getElementById("window-shop");
+	blackMarketButton = document.getElementById("desktop-shop");
 	blackMarketMiners = document.getElementById("window-shop-container").children;
 	myDataMiners = [];
+	myDataMinersWindow = document.getElementById("window-miner");
+	myDataMinersButton = document.getElementById("desktop-miner");
 
 	myDataMiners.push(document.getElementById("shop-basic-miner-inv"));
 	myDataMiners.push(document.getElementById("shop-advanced-miner-inv"));
@@ -69,6 +78,8 @@ Exo.Initiate = function() {
 	Exo.GUI.SetRankName();
 	Exo.GUI.UnlockMiners();
 	Exo.GUI.Create();
+
+	Exo.FetchCurrentMiners(false);
 
 	if (Exo.LoadExternalImages) {
 		Exo.LoadImages();
@@ -380,7 +391,7 @@ Exo.OpenPort = function(port) {
 	if (button != undefined) {
 		if (parseFloat(button.style.opacity) == 1.0) {
 			button.click();
-			Exo.Log("Opened port " + port);
+			Exo.Log("[Attack] Opened port " + port);
 			return true;
 		}
 		return false;
@@ -392,7 +403,7 @@ Exo.OpenPort = function(port) {
 Exo.OpenTarget = function(target) {
 	targetInput.value = target.trim();
 	Exo.Submit(targetForm);
-	Exo.Log("Target acquired.");
+	Exo.Log("[Attack] Target acquired.");
 }
 
 Exo.ShowPorts = function() {
@@ -401,6 +412,37 @@ Exo.ShowPorts = function() {
 		return true;
 	}
 	console.error("[Exobot] Tried to click hack button, but it's not visible.");
+}
+
+Exo.GetMyBTC = function() {
+	return parseFloat(BTCAmount.innerHTML);
+}
+
+Exo.GetMinerPrice = function(miner) {
+	return parseFloat(blackMarketMiners[miner].children[1].children[3].innerHTML);
+}
+
+Exo.FetchCurrentMiners = function(silent) {
+	for (i = 0; i < myDataMiners.length; i++) {
+		miners[i] = parseInt(myDataMiners[i].children[2].children[0].innerHTML);
+	}
+
+	if (!silent) {
+		Exo.Log("Current miners fetched.");
+	}
+}
+
+Exo.GetMinerAmount = function(miner) {
+	return parseInt(myDataMiners[miner].children[2].children[0].innerHTML);
+}
+
+Exo.BuyMiner = function(miner) {
+	if (Exo.GetMyBTC() >= Exo.GetMinerPrice(miner)) {
+		blackMarketMiners[miner].click();
+		miners[miner]++;
+		return true;
+	}
+	return false;
 }
 
 Exo.Start = function(target) {
@@ -421,29 +463,29 @@ Exo.Start = function(target) {
 	var port = 1;
 	var progress = timeout = 0;
 
-	Exo.Worker = setInterval(function() {
+	Exo.WorkerAttack = setInterval(function() {
 		if (!Exo.Initiated) {
 			Exo.Initiate();
 			return;
 		}
 		if (!targetLoaded) {
-			Exo.Log("Acquiring target...");
+			Exo.Log("[Attack] Acquiring target...");
 			Exo.OpenTarget(target);
 			targetLoaded = true;
 			return;
 		}
 		if (!Exo.IsVisible(targetWindow)) {
-			Exo.Log("Target window is not visible yet, waiting for next tick.");
+			Exo.Log("[Attack] Target window is not visible yet, waiting for next tick.");
 			return;
 		}
 		if (!portsVisible) {
 				Exo.ShowPorts();
-				Exo.Log("Showing ports of target.");
+				Exo.Log("[Attack] Showing ports of target.");
 				portsVisible = true;
 				return;
 			}
 		if (!Exo.IsVisible(portsWrapper)) {
-			Exo.Log("Ports are not visible yet, waiting for next tick");
+			Exo.Log("[Attack] Ports are not visible yet, waiting for next tick");
 			return;
 		}
 		if (!ready) {
@@ -451,24 +493,24 @@ Exo.Start = function(target) {
 				ready = true;
 				return;
 			}
-			Exo.Log("I don't have enough BTC to open port, checking again next tick.");
+			Exo.Log("[Attack] I don't have enough BTC to open port, checking again next tick.");
 			return;
 		}
 
 		if (ready && Exo.IsVisible(hackingWindow)) {
 			if (confirmed) {
 				if (Exo.IsVisible(success)) {
-					Exo.Log("Waiting for success window to close.");
+					Exo.Log("[Attack] Waiting for success window to close.");
 					return;
 				}
 				confirmed = false;
-				Exo.Log("Success window closed, resuming.");
+				Exo.Log("[Attack] Success window closed, resuming.");
 				return;
 			} else {
 				var barProgress = parseInt(hackingProgressBar.style.width);
 
 				if (Exo.IsVisible(success)) {
-					Exo.Log("Hacking successfull, confirming.");
+					Exo.Log("[Attack] Hacking successfull, confirming.");
 					Exo.ConfirmSuccess();
 
 					ready = false;
@@ -486,40 +528,77 @@ Exo.Start = function(target) {
 					if (barProgress < 100) {
 						wordTyped = false;
 						progress = barProgress;
-						Exo.Log("Progress changed to " + barProgress);
+						Exo.Log("[Attack] Progress changed to " + barProgress);
 						return;
 					}
-					Exo.Log("Progress bar is full, waiting for success window.");
+					Exo.Log("[Attack] Progress bar is full, waiting for success window.");
 					return;
 				} else if (!wordTyped) {
 					if (Exo.GetWordKey()) {
 						if (!askingForWord) {
-							Exo.Log("Typing word");
+							Exo.Log("[Attack] Typing word");
 							if (Exo.TypeWord()) {
 								wordTyped = true;
 							} else {
-								Exo.Log("Unknown word, asking user.");
+								Exo.Log("[Attack] Unknown word, asking user.");
 							}
 							return;
 						}
-						Exo.Log("Waiting for the unknown word from user.");
+						Exo.Log("[Attack] Waiting for the unknown word from user.");
 						return;
 					}
-					Exo.Log("Word not loaded, waiting for next tick.");
+					Exo.Log("[Attack] Word not loaded, waiting for next tick.");
 					return;
 				}
-				Exo.Log("Waiting for game to load to perform next action.");
+				Exo.Log("[Attack] Waiting for game to load to perform next action.");
 				return;
 			}
 		}
-		Exo.Log("Hacking window is not open yet, waiting for next tick.");
+		Exo.Log("[Attack] Hacking window is not open yet, waiting for next tick.");
 		return;
-	}, Exo.Interval);
+	}, Exo.AttackInterval);
+
+	var bought = null;
+
+	Exo.WorkerSetup = setInterval(function() {
+		if (Exo.Setup) {
+			if (!Exo.IsVisible(blackMarket)) {
+				blackMarketButton.click();
+				Exo.Log("[Setup] Opening black market window.");
+				return;
+			}
+			if (!Exo.IsVisible(myDataMinersWindow)) {
+				myDataMinersButton.click();
+				Exo.Log("[Setup] Opening miners window.");
+				return;
+			}
+
+			if (bought != null && Exo.GetMinerAmount(bought) != miners[bought]) {
+				Exo.Log("[Setup] Buy not confirmed, waiting for next tick.");
+				return;
+			}
+
+			Exo.FetchCurrentMiners(true);
+
+			for (i = 0; i < miners.length; i++) {
+				if (miners[i] < 20 && Exo.GetMyBTC() >= Exo.GetMinerPrice(i) * 2) {
+					Exo.BuyMiner(i);
+					bought = i;
+
+					Exo.Log("[Setup] Bought a miner-" + i);
+					return;
+				}
+			}
+		}
+	}, Exo.SetupInterval);
 }
 
 Exo.Stop = function() {
-	clearInterval(Exo.Worker);
-	Exo.Worker = null;
+	clearInterval(Exo.WorkerAttack);
+	clearInterval(Exo.WorkerSetup);
+	Exo.WorkerAttack = null;
+	Exo.WorkerSetup = null;
+
 	Exo.GUI.ToggleStartStop(false);
 
 	Exo.Log("Stopped.");
