@@ -55,7 +55,7 @@ Exo.Initiate = function() {
 	targetWindow = document.getElementById("window-other");
 	hackButton = document.getElementById("window-other-button");
 	portsWrapper = document.getElementById("window-other-attackbutton-wrapper");
-	adWindow = document.getElementById("window-msg");
+	adWindow = document.getElementById("window-msg2");
 	profilePicture = document.getElementsByClassName("window-my-wrapper")[0].children[0];
 	rankMaster = document.getElementById("window-rank-container").children[5];
 	BTCAmount = document.getElementById("window-my-coinamount");
@@ -338,7 +338,7 @@ Exo.LoadImages = function() {
 }
 
 Exo.GetWordKey = function() {
-	match = /\/((?:easy|medium|hard)\/[a-z0-9]+)\.png$/.exec(hackingImage.src);
+	match = /\/(\d+)/.exec(hackingImage.src);
 
 	if (match[1] == null || match[1] == undefined) {
 		return false;
@@ -350,7 +350,7 @@ Exo.GetWordKey = function() {
 Exo.TypeWord = function() {
 	var key = Exo.GetWordKey().toString();
 
-	if (key != false && images[key] != null) {
+	if (key != null && images[key] != null) {
 		hackingInput.value = images[key];
 		Exo.Submit(hackingForm);
 		return true;
