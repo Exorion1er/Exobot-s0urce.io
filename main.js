@@ -543,7 +543,7 @@ Exo.Start = function(target) {
 				} else if (!wordTyped) {
 					if (Exo.GetWordKey()) {
 						if (!askingForWord) {
-							Exo.Log("[Attack] Typing word");
+							Exo.Log("[Attack] Typing word " + Exo.GetWordKey().toString());
 							if (Exo.TypeWord()) {
 								wordTyped = true;
 							} else {
