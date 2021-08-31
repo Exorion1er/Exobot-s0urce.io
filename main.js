@@ -250,12 +250,16 @@ Exo.GUI.Start = function() {
 	var target = document.getElementById("exobot-targetid").value.trim();
 	var error = document.getElementById("exobot-targeterror");
 
-	if (target != null && target != undefined && target != "") {
+	if (Exo.IsVisible(targetWindow)) {
+		Exo.Log("Starting bot from GUI. Target is from open window.");
+		error.setAttribute("hidden", true);
+		Exo.Start();
+	} else if (target != null && target != undefined && target != "") {
 		Exo.Log("Starting bot from GUI. Target : " + target);
 		error.setAttribute("hidden", true);
 		Exo.Start(target);
 	} else {
-		error.innerHTML = "Please provide a target.";
+		error.innerHTML = "Please provide a target ID or open a target's window.";
 		error.removeAttribute("hidden");
 	}
 }
@@ -450,8 +454,8 @@ Exo.Start = function(target) {
 		return;
 	}
 
-	if (target == null || target == undefined || target.trim() == "") {
-		console.error("[Exobot] Please input a target.");
+	if (!Exo.IsVisible(targetWindow) && (target == null || target == undefined || target.trim() == "")) {
+		console.error("[Exobot] Please input a target or open a target's window.");
 		return;
 	}
 
@@ -469,7 +473,11 @@ Exo.Start = function(target) {
 		}
 		if (!targetLoaded) {
 			Exo.Log("[Attack] Acquiring target...");
-			Exo.OpenTarget(target);
+
+			if (!Exo.IsVisible(targetWindow) && target != null && target != undefined && target.Trim() != "") {
+				Exo.OpenTarget(target);
+			}
+
 			targetLoaded = true;
 			return;
 		}
