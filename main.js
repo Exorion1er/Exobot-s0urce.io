@@ -84,6 +84,9 @@ Exo.Initiate = function() {
 	if (Exo.LoadExternalImages) {
 		Exo.LoadImages();
 	}
+
+	Exo.Initiated = true;
+	Exo.Log("Exobot initiated");
 }
 
 Exo.GUI.KillAd = function() {
@@ -335,9 +338,6 @@ Exo.LoadImages = function() {
 	Exo.LoadJSON("https://raw.githubusercontent.com/ExoKalork/Exobot-s0urce.io/master/images.json", function(data) {
 		images = data;
 		Exo.Log("Loaded external images.");
-
-		Exo.Initiated = true;
-		Exo.Log("Exobot initiated");
 	});
 }
 
