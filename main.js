@@ -342,13 +342,13 @@ Exo.LoadImages = function() {
 }
 
 Exo.GetWordKey = function() {
-	match = /\/(\d+)/.exec(hackingImage.src);
+	match = /(e|m|h)\/(\d+)$/.exec(hackingImage.src);
 
-	if (match[1] == null || match[1] == undefined) {
+	if (match[1] == null || match[1] == undefined || match[2] == null || match[2] == undefined) {
 		return false;
 	}
 
-	return match[1];
+	return match[1] + match[2];
 }
 
 Exo.TypeWord = function() {
